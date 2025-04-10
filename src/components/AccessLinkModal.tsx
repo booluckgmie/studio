@@ -31,13 +31,14 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
         title: 'Error',
         description: 'Please enter a valid email address.',
       });
+      setLoading(false);
       return;
     }
 
     try {
       const result = await generateAccessCode({email});
 
-      if (result.emailSent) {
+      if (result && result.emailSent) {
         toast({
           title: 'Success',
           description: `Access granted! A hash code will be sent to ${email}.`,

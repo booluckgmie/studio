@@ -68,7 +68,10 @@ async input => {
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
       } else {
         console.error('Error generating access code:', error);
-        throw error; // Re-throw other errors
+        return {
+          accessCode: '',
+          emailSent: false,
+        };
       }
     }
   }
@@ -76,7 +79,10 @@ async input => {
   if (!output) {
     const errorMessage = 'Failed to generate access code after multiple retries.';
     console.error(errorMessage);
-    throw new Error(errorMessage);
+    return {
+      accessCode: '',
+      emailSent: false,
+    };
   }
 
   const accessCode = output.accessCode;
