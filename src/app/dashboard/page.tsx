@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
-import {Chart, ChartContainer, ChartLegend, ChartTooltip, ChartTooltipContent,} from '@/components/ui/chart';
+import {Chart, ChartContainer, ChartLegend, ChartTooltip, ChartTooltipContent, ChartLine} from '@/components/ui/chart';
 import {
     LineChart,
     Line,
