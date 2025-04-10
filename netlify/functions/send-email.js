@@ -1,6 +1,6 @@
 // netlify/functions/send-email.js
-const { sendEmail } = require('../../src/services/email'); // Adjust the path as needed
-const { generateRandomHash } = require('../../src/lib/utils'); // Adjust the path as needed
+const { sendEmail } = require('/src/services/email');
+const { generateRandomHash } = require('/src/lib/utils');
 
 exports.handler = async function (event, context) {
   if (event.httpMethod !== 'POST') {
