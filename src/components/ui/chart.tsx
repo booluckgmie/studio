@@ -19,7 +19,7 @@ export type ChartConfig = {
 }
 
 type ChartContextProps = {
-  config: ChartConfig
+  config: ChartConfig | null;
 }
 
 const ChartContext = React.createContext<ChartContextProps | null>(null)
@@ -37,7 +37,7 @@ function useChart() {
 const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
-    config: ChartConfig
+    config: ChartConfig | null
     children: React.ComponentProps<
       typeof RechartsPrimitive.ResponsiveContainer
     >["children"]
@@ -68,10 +68,10 @@ const ChartContainer = React.forwardRef<
 ChartContainer.displayName = "Chart"
 export { ChartContainer as Chart };
 
-const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
-  const colorConfig = Object.entries(config).filter(
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig | null }) => {
+  const colorConfig = config ? Object.entries(config).filter(
     ([, config]) => config.theme || config.color
-  )
+  ) : [];
 
   if (!colorConfig.length) {
     return null
@@ -144,7 +144,7 @@ const ChartTooltipContent = React.forwardRef<
       const itemConfig = getPayloadConfigFromPayload(config, item, key)
       const value =
         !labelKey && typeof label === "string"
-          ? config[label as keyof typeof config]?.label || label
+          ? config?.[label as keyof typeof config]?.label || label
           : itemConfig?.label
 
       if (labelFormatter) {
@@ -319,11 +319,11 @@ ChartLegendContent.displayName = "ChartLegend"
 
 // Helper to extract item config from a payload.
 function getPayloadConfigFromPayload(
-  config: ChartConfig,
+  config: ChartConfig | null,
   payload: unknown,
   key: string
 ) {
-  if (typeof payload !== "object" || payload === null) {
+  if (typeof payload !== "object" || payload === null || config === null) {
     return undefined
   }
 
