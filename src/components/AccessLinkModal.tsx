@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogClose} from '@/components/ui/dialog';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
@@ -9,7 +9,6 @@ import {sendEmail, Email} from '@/services/email';
 import {useToast} from '@/hooks/use-toast';
 import {Icons} from '@/components/icons';
 import {generateAccessCode} from '@/ai/flows/generate-access-code';
-import {generateRandomHash} from '@/lib/utils';
 import { User } from 'lucide-react';
 
 interface AccessLinkModalProps {
@@ -20,7 +19,7 @@ interface AccessLinkModalProps {
 const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
   const [email, setEmail] = useState('');
   const [hashCode, setHashCode] = useState('');
-  const [isPasscodeSent, setIsPasscodeSent] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [generatedHash, setGeneratedHash] = useState('');
   const {toast} = useToast();
 
@@ -63,25 +62,34 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
     setLoading(false);
   };
 
+  const [isPasscodeSent, setIsPasscodeSent] = useState(false);
+
   const generateAndSendHashCode = async () => {
     setLoading(true);
-    const newHash = generateRandomHash(6);
-    setGeneratedHash(newHash);
-
     try {
-      const emailParams: Email = {
-        to: email,
-        subject: 'Your Access Passcode',
-        html: `<p>Your access passcode is: <strong>${newHash}</strong></p>`,
-      };
-
-      await sendEmail(emailParams);
-
-      toast({
-        title: 'Hash Code Generated and Sent',
-        description: `A hash code has been generated and sent to ${email}.`,
+      const response = await fetch('/.netlify/functions/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
       });
-      setIsPasscodeSent(true);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: 'Passcode Sent',
+          description: 'A passcode has been sent to your email.',
+        });
+        setIsPasscodeSent(true);
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: data.error || 'Failed to send email.',
+        });
+      }
     } catch (error) {
       console.error('Error sending email:', error);
       toast({
@@ -97,7 +105,7 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
 
 
   const handleHashCodeAccess = () => {
-    if (!hashCode || hashCode !== generatedHash) {
+    if (!hashCode) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -110,10 +118,8 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
       title: 'Success',
       description: `Access granted with hash code: ${hashCode}`,
     });
-
     onClose();
   };
-  const [loading, setLoading] = useState(false);
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md mx-auto flex flex-col">
