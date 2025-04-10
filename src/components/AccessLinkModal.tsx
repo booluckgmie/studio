@@ -1,7 +1,12 @@
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+import {useState} from 'react';
+>>>>>>> parent of 21c3b7d (create app_hashcode)
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogClose} from '@/components/ui/dialog';
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
 import {Label} from '@/components/ui/label';
@@ -9,7 +14,11 @@ import {sendEmail, Email} from '@/services/email';
 import {useToast} from '@/hooks/use-toast';
 import {Icons} from '@/components/icons';
 import {generateAccessCode} from '@/ai/flows/generate-access-code';
+<<<<<<< HEAD
 import { User } from 'lucide-react';
+=======
+import {Progress} from '@/components/ui/progress';
+>>>>>>> parent of 21c3b7d (create app_hashcode)
 
 interface AccessLinkModalProps {
   isOpen: boolean;
@@ -20,7 +29,10 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
   const [email, setEmail] = useState('');
   const [hashCode, setHashCode] = useState('');
   const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
   const [generatedHash, setGeneratedHash] = useState('');
+=======
+>>>>>>> parent of 21c3b7d (create app_hashcode)
   const {toast} = useToast();
 
   const handleEmailRequest = async () => {
@@ -62,6 +74,7 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
     setLoading(false);
   };
 
+<<<<<<< HEAD
   const [isPasscodeSent, setIsPasscodeSent] = useState(false);
 
   const generateAndSendHashCode = async () => {
@@ -104,6 +117,8 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
 
 
 
+=======
+>>>>>>> parent of 21c3b7d (create app_hashcode)
   const handleHashCodeAccess = () => {
     if (!hashCode) {
       toast({
@@ -118,8 +133,15 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
       title: 'Success',
       description: `Access granted with hash code: ${hashCode}`,
     });
+<<<<<<< HEAD
     onClose();
   };
+=======
+    window.open('https://www.google.com', '_blank');
+    onClose();
+  };
+
+>>>>>>> parent of 21c3b7d (create app_hashcode)
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md mx-auto flex flex-col">
@@ -127,47 +149,45 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
           <DialogTitle>Request Access</DialogTitle>
           <DialogDescription>Choose your preferred access method</DialogDescription>
         </DialogHeader>
-        <div className="space-y-2">
-          <Label htmlFor="email">Enter Your Email:</Label>
-          <Input
-            type="email"
-            id="email"
-            placeholder="Your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <Button
-          className="w-full"
-          onClick={generateAndSendHashCode}
-          disabled={loading || !email}
-        >
-          {loading ? (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            'Generate Passcode and Send to Email'
-          )}
-        </Button>
-
-        {isPasscodeSent && (
-          <div className="mt-4 space-y-2">
-            <Label htmlFor="passcode">Enter Received Passcode:</Label>
+        <Tabs defaultValue="email" className="w-full">
+          <TabsList>
+            <TabsTrigger value="email">
+              <Icons.mail className="mr-2 h-4 w-4" />
+              Email
+            </TabsTrigger>
+            <TabsTrigger value="hash">
+              <Icons.shield className="mr-2 h-4 w-4" />
+              Hash Code
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="email" className="space-y-2">
+            <Label htmlFor="email">Enter Your Email:</Label>
+            <Input
+              type="email"
+              id="email"
+              placeholder="Your Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Button className="w-full" onClick={handleEmailRequest}>
+              Request Access
+            </Button>
+            {loading && <Progress className="w-full mt-2" />}
+          </TabsContent>
+          <TabsContent value="hash" className="space-y-2">
+            <Label htmlFor="hash">Enter Hash Code:</Label>
             <Input
               type="text"
-              id="passcode"
-              placeholder="Passcode"
+              id="hash"
+              placeholder="Hash Code"
               value={hashCode}
               onChange={(e) => setHashCode(e.target.value)}
             />
             <Button className="w-full" onClick={handleHashCodeAccess}>
-              Submit Passcode and Access Link
+              Access Directly
             </Button>
-          </div>
-        )}
-
-
-
-
+          </TabsContent>
+        </Tabs>
         <DialogClose asChild>
           <Button variant="secondary" className="mt-4">
             Cancel
