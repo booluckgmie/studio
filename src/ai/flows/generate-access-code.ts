@@ -56,9 +56,28 @@ const generateAccessCodeFlow = ai.defineFlow<
   outputSchema: GenerateAccessCodeOutputSchema,
 },
 async input => {
-  const {output} = await generateAccessCodePrompt(input);
+  let output;
+  let retries = 0;
+  while (retries < 3) {
+    try {
+      const result = await generateAccessCodePrompt(input);
+      output = result.output;
+      break;
+    } catch (error: any) {
+      if (error.message?.includes('429 Too Many Requests')) {
+        retries++;
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+      } else {
+        throw error; // Re-throw other errors
+      }
+    }
+  }
 
-  const accessCode = output!.accessCode;
+  if (!output) {
+    throw new Error('Failed to generate access code after multiple retries.');
+  }
+
+  const accessCode = output.accessCode;
 
   let emailSent = false;
   try {

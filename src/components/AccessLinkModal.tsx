@@ -10,6 +10,7 @@ import {sendEmail, Email} from '@/services/email';
 import {useToast} from '@/hooks/use-toast';
 import {Icons} from '@/components/icons';
 import {generateAccessCode} from '@/ai/flows/generate-access-code';
+import {Progress} from '@/components/ui/progress';
 
 interface AccessLinkModalProps {
   isOpen: boolean;
@@ -19,9 +20,11 @@ interface AccessLinkModalProps {
 const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
   const [email, setEmail] = useState('');
   const [hashCode, setHashCode] = useState('');
+  const [loading, setLoading] = useState(false);
   const {toast} = useToast();
 
   const handleEmailRequest = async () => {
+    setLoading(true);
     if (!email) {
       toast({
         variant: 'destructive',
@@ -54,6 +57,8 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
         description: 'Failed to generate access code. Please try again later.',
       });
     }
+
+    setLoading(false);
   };
 
   const handleHashCodeAccess = () => {
@@ -104,6 +109,7 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
             <Button className="w-full" onClick={handleEmailRequest}>
               Request Access
             </Button>
+            {loading && <Progress className="w-full mt-2" />}
           </TabsContent>
           <TabsContent value="hash" className="space-y-2">
             <Label htmlFor="hash">Enter Hash Code:</Label>

@@ -2,16 +2,16 @@
 
 import React from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import {Chart, ChartContainer, ChartLegend, ChartTooltip, ChartTooltipContent,} from '@/components/ui/chart';
 import {
-  Chart,
-  ChartBar,
-  ChartContainer,
-  ChartLegend,
-  ChartLine,
-  ChartPie,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart';
+    LineChart,
+    Line,
+    BarChart,
+    Bar,
+    PieChart,
+    Pie,
+    Cell,
+} from 'recharts';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';

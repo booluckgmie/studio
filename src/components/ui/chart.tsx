@@ -66,6 +66,7 @@ const ChartContainer = React.forwardRef<
   )
 })
 ChartContainer.displayName = "Chart"
+export { ChartContainer as Chart };
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
