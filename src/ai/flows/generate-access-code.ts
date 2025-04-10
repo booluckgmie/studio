@@ -1,4 +1,3 @@
-// src/ai/flows/generate-access-code.ts
 'use server';
 /**
  * @fileOverview Flow for generating and sending a unique access code to a user's email.
@@ -68,13 +67,16 @@ async input => {
         retries++;
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
       } else {
+        console.error('Error generating access code:', error);
         throw error; // Re-throw other errors
       }
     }
   }
 
   if (!output) {
-    throw new Error('Failed to generate access code after multiple retries.');
+    const errorMessage = 'Failed to generate access code after multiple retries.';
+    console.error(errorMessage);
+    throw new Error(errorMessage);
   }
 
   const accessCode = output.accessCode;
@@ -98,4 +100,3 @@ async input => {
     emailSent: emailSent,
   };
 });
-
