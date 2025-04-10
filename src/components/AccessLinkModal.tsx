@@ -86,7 +86,7 @@ const AccessLinkModal: React.FC<AccessLinkModalProps> = ({isOpen, onClose}) => {
           <DialogTitle>Request Access</DialogTitle>
           <DialogDescription>Choose your preferred access method</DialogDescription>
         </DialogHeader>
-        <Tabs defaultvalue="email" className="w-full">
+        <Tabs defaultValue="email" className="w-full">
           <TabsList>
             <TabsTrigger value="email">
               <Icons.mail className="mr-2 h-4 w-4" />
